@@ -36,18 +36,21 @@ void viewpro(struct Product [],int );
 void updatepro(struct Product [],int );
 void deletepro(struct Product [],int );
 void searchpro(struct Product [],int );
+void shortpro(struct Product []);
 
 void addsell(struct selling [],struct Product [],int);
 void viewsell(struct selling [],int );
 void updatesell(struct selling [], struct Product [], int number);
 void deletesell(struct selling [], struct Product [],int );
 void searchsell(struct selling [],int );
+void shortsell(struct selling []);
 
 void addpur(struct purchase [],struct Product [],int);
 void viewpur(struct purchase [],int );
 void updatepur(struct purchase [], struct Product [],int );
 void deletepur(struct purchase [], struct Product [],int );
 void searchpur(struct purchase [],int );
+void shortpur(struct purchase []);
 
 void viewinventory(struct Product []);
 void viewsales(struct selling []);
@@ -84,7 +87,8 @@ int main(){
                     printf("3. Update Product\n");
                     printf("4. Delete Product\n");
                     printf("5. Search Product\n");
-                    printf("6. Exit\n");
+                    printf("6. short Product\n");
+                    printf("7. Exit\n");
                     printf("Enter your choice: ");
                     scanf("%d", &prochoice);
             
@@ -113,6 +117,10 @@ int main(){
                         break;
             
                     case 6:
+                        shortpro(pro);
+                        break;
+
+                    case 7:
                         printf("Exiting the program\n");
                         break;
                     
@@ -121,7 +129,7 @@ int main(){
                         break;
                     }
             
-                } while (prochoice != 6);
+                } while (prochoice != 7);
 
             break;
 
@@ -134,7 +142,8 @@ int main(){
                 printf("3. Update Sale Transaction\n");
                 printf("4. Delete Sale Transaction\n");
                 printf("5. Search Sale Transaction\n");
-                printf("6. Exit\n");
+                printf("6. Short Sale Transaction\n");
+                printf("7. Exit\n");
                 printf("Enter your choice: ");
                 scanf("%d", &sellchoice);
         
@@ -161,8 +170,12 @@ int main(){
                 case 5:       
                 searchsell(sell,sellidcount);    
                     break;
-        
+
                 case 6:
+                shortsell(sell);
+                    break;
+        
+                case 7:
                     printf("Exiting the program\n");
                     break;
                 
@@ -171,7 +184,7 @@ int main(){
                     break;
                 }
         
-            } while (sellchoice != 6);
+            } while (sellchoice != 7);
 
             break;
 
@@ -184,7 +197,8 @@ int main(){
                 printf("3. Update purchase Transaction\n");
                 printf("4. Delete purchase Transaction\n");
                 printf("5. Search purchase Transaction\n");
-                printf("6. Exit\n");
+                printf("6. Short purchase Transaction\n");
+                printf("7. Exit\n");
                 printf("Enter your choice: ");
                 scanf("%d", &purchoice);
         
@@ -211,8 +225,12 @@ int main(){
                 case 5:       
                 searchpur(pur,puridcount);    
                     break;
-        
+
                 case 6:
+                shortpur(pur);
+                    break;
+        
+                case 7:
                     printf("Exiting the program\n");
                     break;
                 
@@ -221,7 +239,7 @@ int main(){
                     break;
                 }
         
-            } while (purchoice != 6);
+            } while (purchoice != 7);
 
             break;
 
@@ -286,10 +304,6 @@ int main(){
 
 void addpro(struct Product pro[],int number){
     FILE *ptr = fopen("inventory.txt", "a");
-    if(ptr == NULL){
-        printf("Error in opening file\n");
-    }
-
     printf("Enter Product ID: ");
     scanf("%d", &pro[number].id);
     printf("Enter Product Name: ");
@@ -539,7 +553,173 @@ void searchpro(struct Product pro[],int number){
                 break;
             }
 }
+void shortpro(struct Product pro[]){
+    FILE *ptr = fopen("inventory.txt","r");
+    if (ptr == NULL)
+    {
+        printf("Error in opening file\n");
+    }
 
+    int i=0,j=0,choice,and;
+    struct Product temp[100];
+    struct Product t;
+    while (fscanf(ptr,"%d\t%s\t%d\t%f\n",&pro[i].id,pro[i].name,&pro[i].quantity,&pro[i].price) != EOF){
+        temp[i]=pro[i];
+        i++;
+    }
+    int count = i;
+    printf("1. Sort By ID\n");
+    printf("2. Sort By Quantity\n");
+    printf("3. Sort By Price\n");
+    printf("Enter your choice: ");
+    scanf("%d", &choice);
+
+    switch (choice) 
+    {
+    case 1:
+        printf("1.Ascending Order\n");
+        printf("2.Descending Order\n");
+        printf("Enter Your Choice: ");
+        scanf("%d", &and);
+
+        if (and==1)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                for (int  j = i+1; j < count; j++)
+                {
+                    if (temp[i].id > temp[j].id)
+                    {
+                        t = temp[i];
+                        temp[i] = temp[j];
+                        temp[j] = t;
+                    }
+                }
+            }
+        }
+        else if (and==2)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                for (int  j = i+1; j < count; j++)
+                {
+                    if (temp[i].id < temp[j].id)
+                    {
+                        t = temp[i];
+                        temp[i] = temp[j];
+                        temp[j] = t;
+                    }
+                }
+            }
+        }
+        else{
+            printf("Invalid choice\n");
+        }
+
+        for (int i = 0; i < count; i++)
+        {
+            printf("%d\t%s\t%d\t%f\n",temp[i].id,temp[i].name,temp[i].quantity,temp[i].price);
+        }
+        break;
+
+    case 2:
+        printf("1.Ascending Order\n");
+        printf("2.Descending Order\n");
+        printf("Enter Your Choice: ");
+        scanf("%d", &and);
+
+        if (and==1)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                for (int  j = i+1; j < count; j++)
+                {
+                    if (temp[i].quantity > temp[j].quantity)
+                    {
+                        t = temp[i];
+                        temp[i] = temp[j];
+                        temp[j] = t;
+                    }
+                }
+            }
+        }
+        else if (and==2)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                for (int  j = i+1; j < count; j++)
+                {
+                    if (temp[i].quantity < temp[j].quantity)
+                    {
+                        t = temp[i];
+                        temp[i] = temp[j];
+                        temp[j] = t;
+                    }
+                }
+            }
+        }
+        else{
+            printf("Invalid choice\n");
+        }
+        
+        for (int i = 0; i < count; i++)
+        {
+            printf("%d\t%s\t%d\t%f\n",temp[i].id,temp[i].name,temp[i].quantity,temp[i].price);
+        }
+        break;
+
+    case 3:
+    printf("1.Ascending Order\n");
+    printf("2.Descending Order\n");
+    printf("Enter Your Choice: ");
+    scanf("%d", &and);
+
+    if (and==1)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            for (int  j = i+1; j < count; j++)
+            {
+                if (temp[i].price > temp[j].price)
+                {
+                    t = temp[i];
+                    temp[i] = temp[j];
+                    temp[j] = t;
+                }
+            }
+        }
+    }
+    else if (and==2)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            for (int  j = i+1; j < count; j++)
+            {
+                if (temp[i].price < temp[j].price)
+                {
+                    t = temp[i];
+                    temp[i] = temp[j];
+                    temp[j] = t;
+                }
+            }
+        }
+    }
+    else{
+        printf("Invalid choice\n");
+    }
+    
+    for (int i = 0; i < count; i++)
+    {
+        printf("%d\t%s\t%d\t%f\n",temp[i].id,temp[i].name,temp[i].quantity,temp[i].price);
+    }
+        break;
+    
+    default:
+        printf("Invalid choice\n");
+        break;
+    }
+    fclose(ptr);
+}
 
 //-------------------------selling-------------------------
 
@@ -547,10 +727,6 @@ void addsell(struct selling sell[], struct Product pro[], int number) {
     FILE *ptr = fopen("selling.txt", "a");
     FILE *ptr1 = fopen("inventory.txt", "r");
     FILE *ptr2 = fopen("temp.txt", "w");
-    if (ptr == NULL || ptr1 == NULL || ptr2 == NULL) {
-        printf("Error in opening file\n");
-        return;
-    }
 
     printf("Enter Selling ID : ");
     scanf("%d", &sell[number].sellid);
@@ -1197,7 +1373,220 @@ void searchsell(struct selling sell[],int number){
 
     
 }
+void shortsell(struct selling sell[]){
+    FILE *ptr =fopen("selling.txt","r");
+    if (ptr != NULL)
+    {
+        printf("Error in opening file\n");
+    }
+    int i=0,j=0,choise,and;
+    struct selling temp[100];
+    struct selling t;
+    while (fscanf(ptr,"%d\t%d\\%d\\%d\t%s\t%s\t%d\t%d\t%f\t%d",&sell[i].sellid,&sell[i].selldate.day,&sell[i].selldate.month,&sell[i].selldate.year,sell[i].cutname,sell[i].Proname,&sell[i].paymenttype,&sell[i].quantity,&sell[i].price,&sell[i].total) != EOF)
+    {
+        temp[i]=sell[i];
+        i++;
+    }
+    int count=i;
+    printf("1. Sort by Selling ID\n");
+    printf("2. Sort by Quantity\n");
+    printf("3. Sort by Price\n");
+    printf("4. Sort by Total\n");
+    printf("Enter your choise: ");
+    scanf("%d",&choise);
+    switch (choise)
+    {
+    case 1:
+        printf("1. Ascending Order\n");
+        printf("2. Descending Order\n");
+        printf("Enter your choise: ");
+        scanf("%d",&and);
 
+        if (and==1)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                for (int j = i+1; j < count; j++)
+                {
+                    if (temp[i].sellid>temp[j].sellid)
+                    {
+                        t=temp[i];
+                        temp[i]=temp[j];
+                        temp[j]=t;
+                    }
+                }
+            }
+        }
+        else if (and==2)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                for (int j = i+1; j < count; j++)
+                {
+                    if (temp[i].sellid<temp[j].sellid)
+                    {
+                        t=temp[i];
+                        temp[i]=temp[j];
+                        temp[j]=t;
+                    }
+                }
+            }
+        }
+        else{
+            printf("Invalid choise\n");
+        }
+        
+        for (int i = 0; i < count; i++)
+        {
+            printf("%d\t%d\\%d\\%d\t%s\t%s\t%d\t%d\t%f\t%d\n",temp[i].sellid,temp[i].selldate.day,temp[i].selldate.month,temp[i].selldate.year,temp[i].cutname,temp[i].Proname,temp[i].paymenttype,temp[i].quantity,temp[i].price,temp[i].total);
+        }
+
+        break;
+
+    case 2:
+        printf("1. Ascending Order\n");
+        printf("2. Descending Order\n");
+        printf("Enter your choise: ");
+        scanf("%d",&and);
+
+        if (and==1)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                for (int j = i+1; j < count; j++)
+                {
+                    if (temp[i].quantity>temp[j].quantity)
+                    {
+                        t=temp[i];
+                        temp[i]=temp[j];
+                        temp[j]=t;
+                    }
+                }
+            }
+        }
+        else if (and==2)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                for (int j = i+1; j < count; j++)
+                {
+                    if (temp[i].quantity<temp[j].quantity)
+                    {
+                        t=temp[i];
+                        temp[i]=temp[j];
+                        temp[j]=t;
+                    }
+                }
+            }
+        }
+        else{
+            printf("Invalid choise\n");
+        }
+        
+        for (int i = 0; i < count; i++)
+        {
+            printf("%d\t%d\\%d\\%d\t%s\t%s\t%d\t%d\t%f\t%d\n",temp[i].sellid,temp[i].selldate.day,temp[i].selldate.month,temp[i].selldate.year,temp[i].cutname,temp[i].Proname,temp[i].paymenttype,temp[i].quantity,temp[i].price,temp[i].total);
+        }
+        break;
+
+    case 3:
+        printf("1. Ascending Order\n");
+        printf("2. Descending Order\n");
+        printf("Enter your choise: ");
+        scanf("%d",&and);
+
+        if (and==1)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                for (int j = i+1; j < count; j++)
+                {
+                    if (temp[i].price>temp[j].price)
+                    {
+                        t=temp[i];
+                        temp[i]=temp[j];
+                        temp[j]=t;
+                    }
+                }
+            }
+        }
+        else if (and==2)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                for (int j = i+1; j < count; j++)
+                {
+                    if (temp[i].price<temp[j].price)
+                    {
+                        t=temp[i];
+                        temp[i]=temp[j];
+                        temp[j]=t;
+                    }
+                }
+            }
+        }
+        else{
+            printf("Invalid choise\n");
+        }
+        
+        for (int i = 0; i < count; i++)
+        {
+            printf("%d\t%d\\%d\\%d\t%s\t%s\t%d\t%d\t%f\t%d\n",temp[i].sellid,temp[i].selldate.day,temp[i].selldate.month,temp[i].selldate.year,temp[i].cutname,temp[i].Proname,temp[i].paymenttype,temp[i].quantity,temp[i].price,temp[i].total);
+        }
+        break;
+
+    case 4:
+        printf("1. Ascending Order\n");
+        printf("2. Descending Order\n");
+        printf("Enter your choise: ");
+        scanf("%d",&and);
+
+        if (and==1)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                for (int j = i+1; j < count; j++)
+                {
+                    if (temp[i].total>temp[j].total)
+                    {
+                        t=temp[i];
+                        temp[i]=temp[j];
+                        temp[j]=t;
+                    }
+                }
+            }
+        }
+        else if (and==2)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                for (int j = i+1; j < count; j++)
+                {
+                    if (temp[i].total<temp[j].total)
+                    {
+                        t=temp[i];
+                        temp[i]=temp[j];
+                        temp[j]=t;
+                    }
+                }
+            }
+        }
+        else{
+            printf("Invalid choise\n");
+        }
+        
+        for (int i = 0; i < count; i++)
+        {
+            printf("%d\t%d\\%d\\%d\t%s\t%s\t%d\t%d\t%f\t%d\n",temp[i].sellid,temp[i].selldate.day,temp[i].selldate.month,temp[i].selldate.year,temp[i].cutname,temp[i].Proname,temp[i].paymenttype,temp[i].quantity,temp[i].price,temp[i].total);
+        }
+        break;
+    
+    default:
+    printf("Invalid choice\n");
+        break;
+    }
+    fclose(ptr);
+}
 
 
 //-------------------------purchase-------------------------
@@ -1207,10 +1596,6 @@ void addpur(struct purchase purchase[],struct Product pro[],int number){
     FILE *ptr = fopen("purchase.txt", "a");
     FILE *ptr1 = fopen("inventory.txt", "r");
     FILE *ptr2 = fopen("temp.txt", "w");
-    if (ptr == NULL || ptr1 == NULL || ptr2 == NULL) {
-        printf("Error in opening file\n");
-        return;
-    }
     printf("Enter Purchase ID: ");
     scanf("%d", &purchase[number].purchaseid);
     printf("Enter Purchase Date (day month year): ");
@@ -1830,6 +2215,220 @@ void searchpur(struct purchase purchase[],int number){
             printf("Invalid choice\n");
             break;
         }
+}
+void shortpur(struct purchase purchase[]){
+    FILE *ptr = fopen("purchase.txt","r");
+    if (ptr != NULL)
+    {
+        printf("Error in opening file\n");
+    }
+    int i=0,j=0,choise,and;
+    struct purchase temp[100];
+    struct purchase t;
+    while (fscanf(ptr,"%d\t%d\\%d\\%d\t%s\t%s\t%d\t%d\t%f\t%d",&purchase[i].purchaseid,&purchase[i].purchasedate.day,&purchase[i].purchasedate.month,&purchase[i].purchasedate.year,purchase[i].name,purchase[i].Proname,&purchase[i].paymenttype,&purchase[i].quantity,&purchase[i].price,&purchase[i].total) != EOF)
+    {
+        temp[i]=purchase[i];
+        i++;
+    }
+    int count=i;
+    printf("1. Sort by Purchase ID\n");
+    printf("2. Sort by Quantity\n");
+    printf("3. Sort by Price\n");
+    printf("4. Sort by Total\n");
+    printf("Enter your choise: ");
+    scanf("%d",&choise);
+    switch (choise)
+    {
+    case 1:
+        printf("1. Ascending Order\n");
+        printf("2. Descending Order\n");
+        printf("Enter your choise: ");
+        scanf("%d",&and);
+
+        if (and==1)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                for (int j = i+1; j < count; j++)
+                {
+                    if (temp[i].purchaseid>temp[j].purchaseid)
+                    {
+                        t=temp[i];
+                        temp[i]=temp[j];
+                        temp[j]=t;
+                    }
+                }
+            }
+        }
+        else if (and==2)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                for (int j = i+1; j < count; j++)
+                {
+                    if (temp[i].purchaseid<temp[j].purchaseid)
+                    {
+                        t=temp[i];
+                        temp[i]=temp[j];
+                        temp[j]=t;
+                    }
+                }
+            }
+        }
+        else{
+            printf("Invalid choise\n");
+        }
+        
+        for (int i = 0; i < count; i++)
+        {
+            printf("%d\t%d\\%d\\%d\t%s\t%s\t%d\t%d\t%f\t%d\n",temp[i].purchaseid,temp[i].purchasedate.day,temp[i].purchasedate.month,temp[i].purchasedate.year,temp[i].name,temp[i].Proname,temp[i].paymenttype,temp[i].quantity,temp[i].price,temp[i].total);
+        }
+
+        break;
+
+    case 2:
+        printf("1. Ascending Order\n");
+        printf("2. Descending Order\n");
+        printf("Enter your choise: ");
+        scanf("%d",&and);
+
+        if (and==1)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                for (int j = i+1; j < count; j++)
+                {
+                    if (temp[i].quantity>temp[j].quantity)
+                    {
+                        t=temp[i];
+                        temp[i]=temp[j];
+                        temp[j]=t;
+                    }
+                }
+            }
+        }
+        else if (and==2)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                for (int j = i+1; j < count; j++)
+                {
+                    if (temp[i].quantity<temp[j].quantity)
+                    {
+                        t=temp[i];
+                        temp[i]=temp[j];
+                        temp[j]=t;
+                    }
+                }
+            }
+        }
+        else{
+            printf("Invalid choise\n");
+        }
+        
+        for (int i = 0; i < count; i++)
+        {
+            printf("%d\t%d\\%d\\%d\t%s\t%s\t%d\t%d\t%f\t%d\n",temp[i].purchaseid,temp[i].purchasedate.day,temp[i].purchasedate.month,temp[i].purchasedate.year,temp[i].name,temp[i].Proname,temp[i].paymenttype,temp[i].quantity,temp[i].price,temp[i].total);
+        }
+        break;
+
+    case 3:
+        printf("1. Ascending Order\n");
+        printf("2. Descending Order\n");
+        printf("Enter your choise: ");
+        scanf("%d",&and);
+
+        if (and==1)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                for (int j = i+1; j < count; j++)
+                {
+                    if (temp[i].price>temp[j].price)
+                    {
+                        t=temp[i];
+                        temp[i]=temp[j];
+                        temp[j]=t;
+                    }
+                }
+            }
+        }
+        else if (and==2)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                for (int j = i+1; j < count; j++)
+                {
+                    if (temp[i].price<temp[j].price)
+                    {
+                        t=temp[i];
+                        temp[i]=temp[j];
+                        temp[j]=t;
+                    }
+                }
+            }
+        }
+        else{
+            printf("Invalid choise\n");
+        }
+        
+        for (int i = 0; i < count; i++)
+        {
+            printf("%d\t%d\\%d\\%d\t%s\t%s\t%d\t%d\t%f\t%d\n",temp[i].purchaseid,temp[i].purchasedate.day,temp[i].purchasedate.month,temp[i].purchasedate.year,temp[i].name,temp[i].Proname,temp[i].paymenttype,temp[i].quantity,temp[i].price,temp[i].total);
+        }
+        break;
+
+    case 4:
+        printf("1. Ascending Order\n");
+        printf("2. Descending Order\n");
+        printf("Enter your choise: ");
+        scanf("%d",&and);
+
+        if (and==1)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                for (int j = i+1; j < count; j++)
+                {
+                    if (temp[i].total>temp[j].total)
+                    {
+                        t=temp[i];
+                        temp[i]=temp[j];
+                        temp[j]=t;
+                    }
+                }
+            }
+        }
+        else if (and==2)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                for (int j = i+1; j < count; j++)
+                {
+                    if (temp[i].total<temp[j].total)
+                    {
+                        t=temp[i];
+                        temp[i]=temp[j];
+                        temp[j]=t;
+                    }
+                }
+            }
+        }
+        else{
+            printf("Invalid choise\n");
+        }
+        
+        for (int i = 0; i < count; i++)
+        {
+            printf("%d\t%d\\%d\\%d\t%s\t%s\t%d\t%d\t%f\t%d\n",temp[i].purchaseid,temp[i].purchasedate.day,temp[i].purchasedate.month,temp[i].purchasedate.year,temp[i].name,temp[i].Proname,temp[i].paymenttype,temp[i].quantity,temp[i].price,temp[i].total);
+        }
+        break;
+    
+    default:
+    printf("Invalid choice\n");
+        break;
+    }
+    fclose(ptr);
 }
 
 
