@@ -53,7 +53,7 @@ int main(){
             break;
 
         case 6:
-            
+            shortpro(Products);
             break;
 
         case 7:
